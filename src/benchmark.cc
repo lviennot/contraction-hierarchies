@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
         node u(i);
         for (std::size_t j = 0; j < g.nb_nodes() ; j += incr) {
             node v(j);
-            dist _ = contr.distance(u, v);
+            contr.distance(u, v);
         }
     }
     auto stop = std::chrono::high_resolution_clock::now();
