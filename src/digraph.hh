@@ -105,6 +105,10 @@ public:
     // Try to update edge uv if present and length l is shorter.
     // Returns true if edge is present.
     bool try_edge_update(node u, node v, edge_len l) ;
+
+    // Compute  a subgraph (nodes are re-indexed) :
+    std::pair<digraph, std::vector<node>>
+        subgraph(std::function<bool(node)> filter) ;
 };
 
 

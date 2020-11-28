@@ -4,6 +4,7 @@ build: _build
 
 _example: test_data/road_corsica.txt test_data/road_corsica_nodes.txt
 	_build/main $^ 8.0 > $@
+	sort -n $@ | diff - test_data/road_corsica_ch.txt 
 
 _build:
 	mkdir -p $@

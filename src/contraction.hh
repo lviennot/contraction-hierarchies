@@ -27,7 +27,7 @@ protected:
 public:
 
     // Prepare for contracting [g]. Nodes in [keep] will not be contracted.
-    contraction(const digraph &g, const std::set<node> &keep = {}) ;
+    contraction(const digraph &g, const std::vector<node> &keep = {}) ;
 
     // Contract nodes successively while average degree is bellow [max_avg_deg].
     digraph & contract(float max_avg_deg

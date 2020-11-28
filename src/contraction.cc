@@ -2,9 +2,9 @@
 
 #include "contraction.hh"
 
-contraction::contraction(const digraph &g, const std::set<node> &keep)
+contraction::contraction(const digraph &g, const std::vector<node> &keep)
     : fwd(g.no_loop()), bwd(fwd.reverse()),
-      contractible(keep), in_contracted_gr(g.nb_nodes(), true),
+      contractible(), in_contracted_gr(g.nb_nodes(), true),
       contract_rank(g.nb_nodes(), g.nb_nodes()), current_rank(0),
       in_degrees(g.nb_nodes()), out_degrees(g.nb_nodes())
 {
@@ -15,9 +15,9 @@ contraction::contraction(const digraph &g, const std::set<node> &keep)
     for (node u : fwd) { out_degrees[u] = fwd.out_degree(u); }
     for (node u : bwd) { in_degrees[u] = bwd.out_degree(u); }
         
-    if (contractible.empty()) { // default value means all nodes
-        for (node u : fwd) { contractible.insert(u); }
-    }
+    // Contractible is the complement of keep:
+    for (node u : g) contractible.insert(u);
+    for (node u : keep) contractible.erase(u);
 }
     
 digraph & contraction::contract(float max_avg_deg) {

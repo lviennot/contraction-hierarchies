@@ -60,34 +60,28 @@ int main (int argc, char **argv) {
               <<" (overflow at "<< dist_max <<")\n";
 
     // ------------------------- load subset -----------------------
-    std::vector<node> sel;
+    std::vector<node> subset;
     std::ifstream input(fsubset);
     CHECK(input.is_open());
     for (std::string line; std::getline(input, line); ) {
-        sel.push_back(labedg.index(line));
+        subset.push_back(labedg.index(line));
     }
     input.close();
-    std::cerr << "loaded subset of "<< sel.size() <<" nodes\n";
-    std::set<node> contractible;
-    for (node u : g) contractible.insert(u);
-    for (node u : sel) contractible.erase(u);
-    std::cerr << "contractibles : "<< contractible.size() <<" nodes\n";
+    std::cerr << "loaded subset of "<< subset.size() <<" nodes\n";
     
     // ------------------------- contraction -----------------------
-    contraction  ch(g, contractible);
+    contraction  ch(g, subset);
     digraph g_ch = ch.contract(max_deg);
     std::cerr << "contraction\n";
 
     // ----------------------------- output ------------------------
-    for (node u : g_ch) {
-        if (ch.in_contracted_graph(u)) {
-            for (auto e : g_ch[u]) {
-                if (ch.in_contracted_graph(e.dst)) {
-                    std::cout << labedg.label(u)
-                              <<"\t"<< labedg.label(e.dst)
-                              <<"\t"<< e.len <<"\n";
-                }
-            }
+    auto subind = g_ch.subgraph
+        ([&ch](node v){ return ch.in_contracted_graph(v); });
+    for (node u : subind.first) {
+        for (auto e : subind.first[u]) {
+            std::cout << labedg.label(subind.second[u])
+                      <<"\t"<< labedg.label(subind.second[e.dst])
+                      <<"\t"<< e.len <<"\n";
         }
     }
 }

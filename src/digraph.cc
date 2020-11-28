@@ -107,6 +107,31 @@ bool digraph::try_edge_update(node u, node v, edge_len l) {
     return false;
 }
 
+std::pair<digraph, std::vector<node>>
+digraph::subgraph(std::function<bool(node)> filter) {
+    const node invalid = node(_n);
+    std::vector<node> index_orig, index(_n, invalid);
+    digraph h;
+    auto add = [&index_orig, &index, invalid](node v) {
+        if (index[v] == invalid) {
+            index[v] = index_orig.size();
+            index_orig.push_back(v);
+        }
+        return index[v];
+    };
+    for (node u : nodes()) {
+        if (filter(u)) {
+            for (auto hd : out_neighbors(u)) {
+                if (filter(hd.dst)) {
+                    h.add_edge(add(u), add(hd.dst), hd.len); 
+                }
+            }
+        }
+    }
+    return std::make_pair(h, index_orig);
+}
+
+
 // ------------- unit test -----------
 
 #include <algorithm>
