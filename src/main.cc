@@ -7,6 +7,7 @@
 #include "digraph.hh"
 #include "contraction.hh"
 
+using namespace ch;
 
 void usage_exit (char **argv) {
     auto paragraph = [](std::string s, int width=80) -> std::string {

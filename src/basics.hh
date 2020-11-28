@@ -15,6 +15,11 @@
 #include <string>
 #include <iostream>
 
+// forward declare friend operator
+//namespace ch { struct edge; }
+//std::ostream& operator<<(std::ostream& os, ch::edge e) ;
+
+namespace ch {
 
 using node = std::uint_least32_t;  // nodes are indexes of arrays
 
@@ -43,10 +48,11 @@ struct edge : public edge_head {
         : edge_head(dst, len), src(src) {}
     node tail() const { return src; }
     edge backward() const { return edge(dst, src, len); }
-    friend std::ostream& operator<<(std::ostream& os, edge  e) {
+    friend std::ostream& operator<<(std::ostream& os, edge e) {
         os << "{" << e.src << ", " << e.dst << ", " << e.len << "}";
         return os;
     }
 };
 
+}
 

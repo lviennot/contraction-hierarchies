@@ -2,8 +2,12 @@
 
 #include <sstream>
 #include <fstream>
+#include <algorithm>
+#include <fstream>
 
 #include "digraph.hh"
+
+using namespace ch;
 
 // ----------------- digraph : a graph as a vector of vectors
 
@@ -13,7 +17,7 @@ digraph::hrange digraph::out_neighbors(node u) const {
     return hrange(out_neighb[u].cbegin(), out_neighb[u].cend());
 }
 
-std::ostream& operator<<(std::ostream & os, const digraph & g) {
+std::ostream& operator<<(std::ostream & os, const ch::digraph & g) {
     os << "{ ";
     bool first = true;
     for (node u : g) {
@@ -134,8 +138,7 @@ digraph::subgraph(std::function<bool(node)> filter) {
 
 // ------------- unit test -----------
 
-#include <algorithm>
-#include <fstream>
+namespace ch {
 
 namespace unit {
 
@@ -189,3 +192,6 @@ namespace unit {
     }
     
 }
+    
+}
+

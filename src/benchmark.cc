@@ -2,6 +2,8 @@
 #include "label_edges.hh"
 #include <ctime>
 
+using namespace ch;
+
 int main(int argc, char **argv) {
 
     assert(argc == 2);

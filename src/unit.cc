@@ -5,6 +5,8 @@
 #include "traversal.hh"
 #include "contraction.hh"
 
+using namespace ch;
+
 int main() {
 
     node u(1), v(2); edge_len l(3);

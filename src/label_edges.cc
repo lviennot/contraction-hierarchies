@@ -2,6 +2,8 @@
 
 #include "label_edges.hh"
 
+namespace ch {
+
 node label_edges::add_label(const std::string & lab) {
     if (indexes.count(lab) == 0) {
         node i = node(labels.size());
@@ -52,7 +54,6 @@ void label_edges::parse_istream(std::istream & is) {
 }
 
 
-
 namespace unit {
 
     digraph dg_small_labs, dg_road;
@@ -60,7 +61,7 @@ namespace unit {
     
     void test_label_edges() {
         label_edges edg("test_data/small.txt");
-        for (node i : utl::irange<node>(0, 7)) { edg.index(std::to_string(i)); }
+        for (node i : irange<node>(0, 7)) { edg.index(std::to_string(i)); }
         CHECK(edg.indexes.count("not a label") == 0);
         
         CHECK(edg.labels.size() == 11);
@@ -81,3 +82,6 @@ namespace unit {
     }
 
 }
+
+}
+

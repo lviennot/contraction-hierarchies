@@ -11,6 +11,8 @@
 #include "digraph.hh"
 #include "traversal.hh"
 
+namespace ch {
+
 class contraction {
 
 protected:
@@ -69,4 +71,6 @@ protected:
 
 namespace unit {
     void test_contraction();
+}
+
 }

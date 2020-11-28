@@ -8,6 +8,8 @@
 #include "ranges.hh"
 #include "digraph.hh"
 
+namespace ch {
+
 // Edges of a graphs with arbitrary labels that are mapped to indexes.
 struct label_edges {
 
@@ -50,4 +52,6 @@ namespace unit {
     extern label_edges edges_road;
     
     void test_label_edges();
+}
+
 }

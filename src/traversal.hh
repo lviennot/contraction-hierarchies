@@ -10,6 +10,8 @@
 #include "basics.hh"
 #include "digraph.hh"
 
+namespace ch {
+
 template <typename G = digraph> // graph type
 class traversal {
 
@@ -217,4 +219,6 @@ public:
 
 namespace unit {
     void test_traversal();
+}
+
 }

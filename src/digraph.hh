@@ -32,6 +32,14 @@
 #include "basics.hh"
 #include "ranges.hh"
 
+// forward declare friend operators
+namespace ch { class digraph; }
+std::ostream& operator<<(std::ostream & os, const ch::digraph & g) ;
+std::istream& operator>>(std::ostream & is, ch::digraph & g) ;
+
+
+namespace ch {
+
 // A digraph as a vector of vectors.
 class digraph {
 
@@ -80,28 +88,22 @@ public:
     void add_edge(edge e) { add_edge(e.src, e); }
     void add(edge e) { add_edge(e.src, e); }
 
-    utl::irange<node> nodes() const {
-        return utl::irange<node>(node(0), node(_n));
-    }
+    irange<node> nodes() const { return irange<node>(node(0), node(_n)); }
     
     // iterator for the graph itself is equivalent to nodes()
-    utl::int_iterator<node> begin() const {
-        return utl::int_iterator<node>(node(0));
-    }
-    utl::int_iterator<node> end() const {
-        return utl::int_iterator<node>(node(_n));
-    }
+    int_iterator<node> begin() const { return int_iterator<node>(node(0));}
+    int_iterator<node> end() const { return int_iterator<node>(node(_n)); }
 
     
-    using hrange = utl::crange<typename std::vector<head>>;
+    using hrange = crange<typename std::vector<head>>;
 
     hrange out_neighbors(node u) const ;
 
     // an alias for out_neighbors() :
     hrange operator[](node u) const { return out_neighbors(u); } 
 
-    friend std::ostream& operator<<(std::ostream & os, const digraph & g) ;
-    friend std::istream& operator>>(std::ostream & is, digraph & g) ;
+    friend std::ostream& ::operator<<(std::ostream & os, const digraph & g) ;
+    friend std::istream& ::operator>>(std::ostream & is, digraph & g) ;
 
     // simple manipulations:
     std::vector<edge> to_edges() const ;
@@ -124,5 +126,7 @@ namespace unit {
     extern digraph dg_small_ids;
     
     void test_digraph() ;
+
+}
 
 }

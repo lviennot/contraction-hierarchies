@@ -1,6 +1,9 @@
 // Author: Laurent Viennot, Inria, 2020.
 
 #include "contraction.hh"
+#include "label_edges.hh"
+
+namespace ch {
 
 contraction::contraction(const digraph &g, const std::vector<node> &keep)
     : fwd(g.no_loop()), bwd(fwd.reverse()),
@@ -156,7 +159,6 @@ bool contraction::cannot_update_edge(node u, node v, dist l) {
 
 
 
-#include "label_edges.hh"
 
 namespace unit {
 
@@ -220,4 +222,6 @@ namespace unit {
         }
         
     }
+}
+
 }

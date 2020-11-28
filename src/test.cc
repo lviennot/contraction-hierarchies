@@ -43,7 +43,7 @@ int main() {
     std::cout <<"\na="<< a <<" a2="<< a2 <<" b="<< b <<" i="<< i <<"\n";
 
     std::vector<int> t = { 1,2,3,4 };
-    for (ida a : utl::irange_rev<ida>(ida(0), ida(4))) std::cout << t[a] <<" ";
+    for (ida a : irange_rev<ida>(ida(0), ida(4))) std::cout << t[a] <<" ";
     std::cout <<"\n";
 
     weight c = 12;

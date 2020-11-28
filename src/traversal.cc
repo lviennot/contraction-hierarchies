@@ -3,6 +3,8 @@
 #include "traversal.hh"
 #include "label_edges.hh"
 
+namespace ch {
+
 namespace unit {
 
     void test_traversal() {
@@ -49,4 +51,6 @@ namespace unit {
         }
          
     }
+}
+
 }
