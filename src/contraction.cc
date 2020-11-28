@@ -170,7 +170,7 @@ namespace unit {
         std::cout <<"contraction : n="<< g_ch.n() <<" m="<< g_ch.m() <<"\n";
         
         // Check distances:
-        traversal trav;
+        traversal<digraph> trav;
         std::size_t n = std::min(std::size_t(10), g.n()), i = 0;
         for (node u : g) {
             if (i < n && contr.in_contracted_graph(u)) {

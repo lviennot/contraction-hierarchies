@@ -7,7 +7,7 @@ namespace unit {
 
     void test_traversal() {
 
-        traversal trav, bwd_trav;
+        traversal<digraph> trav, bwd_trav;
 
         // test small graph
 

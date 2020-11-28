@@ -38,6 +38,7 @@ add_library(common OBJECT
          src/contraction.cc
 )
 
+# target_link_libraries (CH LINK_PUBLIC common)
 
 add_executable(main
         src/main.cc
