@@ -28,6 +28,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include "basics.hh"
 #include "ranges.hh"

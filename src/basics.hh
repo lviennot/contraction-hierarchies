@@ -12,6 +12,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <limits>
 #include <string>
 #include <iostream>
 
