@@ -66,12 +66,20 @@ bool contraction::cmp_vtx_deg(vtx_deg left, vtx_deg right) {
     return left.deg < right.deg;
 }
 
+
+constexpr std::size_t max_shift8 = 0xff;
+
 std::size_t contraction::fill_degree(node u) {
-    std::size_t din = in_degrees[u];
-    std::size_t dout = out_degrees[u];
-    std::size_t d = std::min(din, dout);
-    if (d <= 1) return std::min(max_shift8, std::max(din, dout));
-    else return (din * dout) << 8;
+    std::size_t dmin = in_degrees[u];
+    std::size_t dmax = out_degrees[u];
+    if (dmin > dmax) { std::swap(dmin, dmax); }
+    assert(dmin <= dmax);
+    if (dmin == 0) { return 0; } // edge removal only
+    if (dmin == 1) { // Remove dmax + 1 edges and add dmax
+        return std::min(dmax, max_shift8); // prefer small dmax
+    }
+    std::size_t fill = dmin * dmax - dmin - dmax;//>=dmax-dmin >= 0 as dmin-1>=1
+    return (fill + 1) << 8;
 }
 
 

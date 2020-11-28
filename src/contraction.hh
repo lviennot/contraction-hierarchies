@@ -57,8 +57,6 @@ protected:
 
     // Estimation of the number of edges produced by contracting [u].
     std::size_t fill_degree(node u) ;
-    static constexpr std::size_t max_shift8 = 0xff;
-
 
     // Returns number of nodes contracted.
     std::size_t contract_round() ;

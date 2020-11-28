@@ -5,7 +5,7 @@ project(contraction_hierarchies CXX)
 include(CMakeDetermineCXXCompiler)
 
 # default to RelWithDebInfo
-# to debug : cmake -DCMAKE_BUILD_TYPE:STRING=Debug
+# to debug : cmake -DCMAKE_BUILD_TYPE:STRING=Debug ..
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
 	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
