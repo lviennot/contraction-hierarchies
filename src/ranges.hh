@@ -2,6 +2,8 @@
 
 #pragma once
 
+namespace utl { //  utils
+
 template<typename I, const bool incr = true>
 class int_iterator {
     I i;
@@ -45,3 +47,5 @@ public:
 private:
     const iterator _beg, _end;
 };
+
+}

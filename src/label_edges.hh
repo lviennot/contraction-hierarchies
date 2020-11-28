@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "basics.hh"
+#include "ranges.hh"
 #include "digraph.hh"
 
 // Edges of a graphs with arbitrary labels that are mapped to indexes.

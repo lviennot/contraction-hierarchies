@@ -8,7 +8,7 @@
 #include <cassert>
 #include <vector>
 
-#include "range.hh"
+#include "ranges.hh"
 
 template <typename I, // index: an integer type convertible to size_t
           typename E> // element type

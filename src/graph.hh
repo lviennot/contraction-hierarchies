@@ -99,7 +99,7 @@
 
 #include "uint_index.hh"
 #include "saturated_int.hh"
-#include "range.hh"
+#include "ranges.hh"
 #include "edge.hh"
 #include "vect_of_vect.hh"
 #include "traversal.hh"

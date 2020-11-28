@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "basics.hh"
+#include "ranges.hh"
 
 // A digraph as a vector of vectors.
 class digraph {
@@ -79,14 +80,20 @@ public:
     void add_edge(edge e) { add_edge(e.src, e); }
     void add(edge e) { add_edge(e.src, e); }
 
-    irange<node> nodes() const { return irange<node>(node(0), node(_n)); }
+    utl::irange<node> nodes() const {
+        return utl::irange<node>(node(0), node(_n));
+    }
     
     // iterator for the graph itself is equivalent to nodes()
-    int_iterator<node> begin() const { return int_iterator<node>(node(0));}
-    int_iterator<node> end() const { return int_iterator<node>(node(_n)); }
+    utl::int_iterator<node> begin() const {
+        return utl::int_iterator<node>(node(0));
+    }
+    utl::int_iterator<node> end() const {
+        return utl::int_iterator<node>(node(_n));
+    }
 
     
-    using hrange = crange<typename std::vector<head>>;
+    using hrange = utl::crange<typename std::vector<head>>;
 
     hrange out_neighbors(node u) const ;
 
