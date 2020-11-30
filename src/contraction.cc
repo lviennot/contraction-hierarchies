@@ -1,5 +1,7 @@
 // Author: Laurent Viennot, Inria, 2020.
 
+#include <iomanip>
+
 #include "contraction.hh"
 #include "label_edges.hh"
 
@@ -34,7 +36,8 @@ digraph & contraction::contract(float max_avg_deg) {
             std::cerr << "CH round "<< round
                       <<" n="<< n <<" m="<< m
                       <<" nb_contr.="<< ncontracted
-                      <<" avg_out_deg="<< (n == 0 ? 0 : m/n)
+                      << std::setprecision(2)
+                      <<" avg_out_deg="<< (n == 0 ? 0 : float(m)/n)
                       <<" CH: m="<< fwd.nb_edges() <<"\n";
         }
     }
@@ -129,13 +132,14 @@ void contraction::contract_node(node u) {
                 if (in_contracted_gr[f.dst]) {
                     if (first_iter) { --(in_degrees[f.dst]); } // u lost
                     if (e.dst != f.dst
-                        && cannot_update_edge(e.dst, f.dst, e.len + f.len)
+                        //&& cannot_update_edge(e.dst, f.dst, e.len + f.len)
                         && e.len + f.len < trav_fwd.bidir_dijkstra
                         (fwd, bwd, trav_bwd,
                          e.dst, f.dst, e.len + f.len, false,
                          [this](node x, dist d, node _) {
                             return in_contracted_gr[x];
                         })
+                        && cannot_update_edge(e.dst, f.dst, e.len + f.len)
                         ) {
                         fwd.add({ e.dst, f.dst, e.len + f.len });
                         bwd.add({ f.dst, e.dst, e.len + f.len }); 
