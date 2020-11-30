@@ -1,6 +1,6 @@
 # Contraction Hierarchies
 
-C++ code for contracting a weighted graph according to Contraction Hierarchies (CH) algorithm.
+C++ code for contracting a weighted graph according to [Contraction Hierarchies](https://en.wikipedia.org/wiki/Contraction_hierarchies) (CH) algorithm.
 
 Author: Laurent Viennot, Inria, 2020.
 
