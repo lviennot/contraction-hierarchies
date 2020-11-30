@@ -17,6 +17,9 @@ unit: build
 _unit_out:
 	_build/unit > $@
 
+benchmark: build
+	_build/benchmark 1000
+
 clean:
 	rm -f *.o src/*~ *~
 	rm -fr *.o.dSYM _*

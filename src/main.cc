@@ -58,7 +58,7 @@ int main (int argc, char **argv) {
         if (e.len > maxlen) { maxlen = e.len; }
     }
     std::cerr <<"maximum edge length: "<< maxlen
-              <<" (overflow at "<< dist_max <<")\n";
+              <<" (distance overflow at "<< dist_max <<")\n";
 
     // ------------------------- load subset -----------------------
     std::vector<node> subset;

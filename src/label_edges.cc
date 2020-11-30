@@ -27,7 +27,7 @@ label_edges::label_edges(std::string fname) {
     
 void label_edges::parse_istream(std::istream & is) {
     std::string src_s, dst_s, len_s, line;
-    const edge_len length_max = std::numeric_limits<edge_len>::max();
+    const auto length_max = std::numeric_limits<edge_len>::max();
     
     while ( ! is.eof()) {
         is >> std::ws;
@@ -45,7 +45,7 @@ void label_edges::parse_istream(std::istream & is) {
         CHECK( ! iss.eof());
         iss >> len_s;
         CHECK(iss.eof());
-        auto len_i = std::stoi(len_s);
+        auto len_i = std::stoll(len_s);
         CHECK(len_i >= 0 && uint64_t(len_i) <= uint64_t(length_max));
         auto src_i = add_label(src_s);
         auto dst_i = add_label(dst_s);

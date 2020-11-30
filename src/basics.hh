@@ -16,20 +16,21 @@
 #include <string>
 #include <iostream>
 
-#include "saturated_int.hh"
+#include "saturated_uint.hh"
 
-// forward declare friend operator
-//namespace ch { struct edge; }
-//std::ostream& operator<<(std::ostream& os, ch::edge e) ;
 
 namespace ch {
 
 using node = std::uint_least32_t;  // nodes are indexes of arrays
 
 // length of an edge (also weight or cost)
-using edge_len = saturated_int <std::uint_least32_t>; 
+using edge_len = saturated_uint <std::uint_least32_t>;
 
-using dist = edge_len; // sum of edge lengths of a path
+// a distance is always obtained as a sum of edge lengths of a path
+using dist = edge_len; 
+
+constexpr std::uint_least32_t dist_max =
+    std::numeric_limits<std::uint_least32_t>::max();
 
 struct edge_head {
     node dst;

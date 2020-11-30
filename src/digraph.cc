@@ -12,6 +12,17 @@ using namespace ch;
 // ----------------- digraph : a graph as a vector of vectors
 
 
+bool digraph::update_edge(node u, node v, edge_len l) {
+    for (head & hd : out_neighb[u]) {
+        if (hd.dst == v) {
+            if (l < hd.len) { hd.len = l; }
+            return false;
+        }
+    }
+    add_edge(u, head(v, l));
+    return true;
+}
+
 digraph::hrange digraph::out_neighbors(node u) const {
     assert(u >= 0 && u < _n);
     return hrange(out_neighb[u].cbegin(), out_neighb[u].cend());
@@ -35,7 +46,7 @@ std::istream& operator>>(std::istream & is, digraph & g) {
     
     std::string src_s, dst_s, len_s, line;
     const node node_max = std::numeric_limits<node>::max();
-    const edge_len length_max = std::numeric_limits<edge_len>::max();
+    const auto length_max = std::numeric_limits<edge_len>::max();
     
     while ( ! is.eof()) { //is.peek() != std::ifstream::traits_type::eof()) {
         is >> std::ws;
@@ -54,9 +65,9 @@ std::istream& operator>>(std::istream & is, digraph & g) {
         iss >> len_s;
         iss >> std::ws;
         CHECK(iss.eof());
-        auto src_i = std::stoi(src_s);
-        auto dst_i = std::stoi(dst_s);
-        auto len_i = std::stoi(len_s);
+        auto src_i = std::stoll(src_s);
+        auto dst_i = std::stoll(dst_s);
+        auto len_i = std::stoll(len_s);
         CHECK(src_i >= 0 && uint64_t(src_i) <= uint64_t(node_max));
         CHECK(dst_i >= 0 && uint64_t(dst_i) <= uint64_t(node_max));
         CHECK(len_i >= 0 && uint64_t(len_i) <= uint64_t(length_max));
@@ -99,16 +110,6 @@ digraph digraph::no_loop() const {
         }
     }
     return g;
-}
-
-bool digraph::try_edge_update(node u, node v, edge_len l) {
-    for (head & hd : out_neighb[u]) {
-        if (hd.dst == v) {
-            if (l < hd.len) { hd.len = l; }
-            return true;
-        }
-    }
-    return false;
 }
 
 std::pair<digraph, std::vector<node>>

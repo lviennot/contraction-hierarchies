@@ -89,6 +89,12 @@ public:
     void add_edge(edge e) { add_edge(e.src, e); }
     void add(edge e) { add_edge(e.src, e); }
 
+    // If edge src->dst is present and has length greater than [l],
+    // update its length to [l]. If the edge is not present, add it with 
+    // length [l].
+    // Returns true if the edge was added;
+    bool update_edge(node src, node dst, edge_len l) ;
+    
     irange<node> nodes() const { return irange<node>(node(0), node(_n)); }
     
     // iterator for the graph itself is equivalent to nodes()
@@ -111,10 +117,6 @@ public:
     bool operator==(const digraph & o) ;
     digraph reverse() const ;
     digraph no_loop() const ;
-
-    // Try to update edge uv if present and length l is shorter.
-    // Returns true if edge is present.
-    bool try_edge_update(node u, node v, edge_len l) ;
 
     // Compute  a subgraph (nodes are re-indexed) :
     std::pair<digraph, std::vector<node>>

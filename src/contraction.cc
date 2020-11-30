@@ -1,6 +1,7 @@
 // Author: Laurent Viennot, Inria, 2020.
 
 #include <iomanip>
+#include <ctime>
 
 #include "contraction.hh"
 #include "label_edges.hh"
@@ -27,23 +28,34 @@ contraction::contraction(const digraph &g, const std::vector<node> &keep)
     
 digraph & contraction::contract(float max_avg_deg) {
     std::size_t round = 0, last_round = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     while (true) {
         if (m >= max_avg_deg * n || contractible.empty()) break;
         std::size_t ncontracted = contract_round();
         ++round;
         if (round >= 3 * last_round / 2) {
             last_round = round;
-            std::cerr << "CH round "<< round
+            auto now = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast
+                <std::chrono::milliseconds>(now - start);
+            std::cerr << "rnd="<< round
+                      << std::fixed << std::setprecision(1)
+                      <<" "<< duration.count() / 1000. <<"s"
                       <<" n="<< n <<" m="<< m
-                      <<" nb_contr.="<< ncontracted
-                      << std::setprecision(2)
+                      <<" nc="<< ncontracted
                       <<" avg_out_deg="<< (n == 0 ? 0 : float(m)/n)
                       <<" CH: m="<< fwd.nb_edges() <<"\n";
         }
     }
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast
+        <std::chrono::milliseconds>(stop - start);
     std::cerr <<"contracted graph: n="<< n <<" m="<< m
-              <<" contraction hierarchies (CH) n="<< fwd.nb_nodes()
-              <<" m="<< fwd.nb_edges() <<"\n";
+              << std::fixed << std::setprecision(1)
+              <<" avg_out_deg="<< (n == 0 ? 0 : float(m)/n)
+              <<" in "<< duration.count() / 1000. <<"s\n"
+              <<"contraction hierarchies (CH) n="<< fwd.nb_nodes()
+              <<" m="<< fwd.nb_edges() <<"\n" << std::flush;
     //for (auto i : contract_rank) { std::cerr <<" "<< i; } std::cerr<<"\n";
     return fwd;
 }
@@ -57,7 +69,7 @@ const std::vector<node> & contraction::contraction_order () const {
 dist contraction::distance(node src, node dst) {
     return trav_fwd.bidir_dijkstra
         (fwd, bwd, trav_bwd,
-         src, dst, dist_max, true,
+         src, dst, trav_fwd.dist_infinity, true,
          [this](node v, dist d, node par) {
             return contract_rank[par] < contract_rank[v];
         });
@@ -131,21 +143,23 @@ void contraction::contract_node(node u) {
             for (auto f : fwd.out_neighbors(u)) {
                 if (in_contracted_gr[f.dst]) {
                     if (first_iter) { --(in_degrees[f.dst]); } // u lost
+                    const dist d_ef = e.len + f.len;
                     if (e.dst != f.dst
-                        //&& cannot_update_edge(e.dst, f.dst, e.len + f.len)
-                        && e.len + f.len < trav_fwd.bidir_dijkstra
+                        && d_ef < trav_fwd.bidir_dijkstra
                         (fwd, bwd, trav_bwd,
-                         e.dst, f.dst, e.len + f.len, false,
+                         e.dst, f.dst, d_ef, false,
                          [this](node x, dist d, node _) {
                             return in_contracted_gr[x];
                         })
-                        && cannot_update_edge(e.dst, f.dst, e.len + f.len)
                         ) {
-                        fwd.add({ e.dst, f.dst, e.len + f.len });
-                        bwd.add({ f.dst, e.dst, e.len + f.len }); 
-                        ++m;
-                        ++(out_degrees[e.dst]);
-                        ++(in_degrees[f.dst]);
+                        const bool fadd = fwd.update_edge(e.dst, f.dst, d_ef);
+                        const bool badd = bwd.update_edge(f.dst, e.dst, d_ef);
+                        assert(fadd == badd);
+                        if (fadd || badd) {
+                            ++m;
+                            ++(out_degrees[e.dst]);
+                            ++(in_degrees[f.dst]);
+                        }
                     }
                 }
             }
@@ -159,14 +173,6 @@ void contraction::contract_node(node u) {
             }
         }
     }
-}
-
-bool contraction::cannot_update_edge(node u, node v, dist l) {
-    if (fwd.try_edge_update(u, v, l)) {
-        CHECK(bwd.try_edge_update(v, u, l));
-        return false;
-    }
-    return true;
 }
 
 
