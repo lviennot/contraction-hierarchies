@@ -1,6 +1,6 @@
 # Contraction Hierarchies
 
-C++ code for contracting a weighted graph according to Contraction Hierarchies (CH) algorithm. An optional argument allows to preserve a given set of nodes from contraction.
+C++ code for contracting a weighted graph according to Contraction Hierarchies (CH) algorithm. 
 
 Compile with `make` (which will call cmake).
 
