@@ -1,11 +1,10 @@
 
 // Saturated ints based on integer type I (designed for unsigned).
-// Using different type parameter T allows to make incompatible clones of I.
-template<typename I, typename T>
+template<typename I>
 class saturated_int {
 public:
     using int_t = I;
-    using sat_t = saturated_int<I, T>;
+    using sat_t = saturated_int<I>;
     static constexpr int_t infinity = std::numeric_limits<int_t>::max(); 
     saturated_int(int_t i) : _i(i) {}
     saturated_int() : _i(infinity) {}
@@ -26,10 +25,10 @@ private:
 
 // Make its max accessible in standard way:
 namespace std {
-    template<typename I, typename T>
-    struct numeric_limits<saturated_int<I,T>> {
-        static saturated_int<I,T> max() {
-            return saturated_int<I,T>::infinity;
+    template<typename I>
+    struct numeric_limits<saturated_int<I>> {
+        static saturated_int<I> max() {
+            return saturated_int<I>::infinity;
         }
     };
 }

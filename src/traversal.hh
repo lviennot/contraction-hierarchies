@@ -28,7 +28,7 @@ protected:
         node _node;
         dist _dist;
         node_dist(node _node, dist _dist) : _node(_node), _dist(_dist) {}
-        node_dist() : _node(-1), _dist(dist_max) {}
+        node_dist() : _node(-1), _dist(dist::infinity) {}
         operator node() const { return _node; }
     };
     static bool node_dist_greater(node_dist a, node_dist b) {
@@ -61,24 +61,24 @@ public:
         // Queue has penalty in scanning elements but some cache locality:
         const std::size_t n_last = visited_nodes.size() + 2 * queue.size();
         if (n_last > capacity / 10) {
-            std::fill(distances.begin(), distances.end(), dist_max);
+            std::fill(distances.begin(), distances.end(), dist::infinity);
             std::fill(visited.begin(), visited.end(), false);
             queue = queue_t(node_dist_greater);
         } else {
             for(node u : visited_nodes) {
-                distances[u] = dist_max;
+                distances[u] = dist::infinity;
                 visited[u] = false;
             }
             for ( ; ! queue.empty() ; queue.pop()) {
                 const node u = queue.top();
-                distances[u] = dist_max;
+                distances[u] = dist::infinity;
                 visited[u] = false;
             }
         }
         visited_nodes.clear();
 
         if (n > distances.size()) {
-            distances.resize(n, dist_max);
+            distances.resize(n, dist::infinity);
             visited.resize(n, false);
         }
         capacity = n;
@@ -123,8 +123,8 @@ public:
     // before a node at distance [r], [pruned] must be set to [true].
     dist bidir_dijkstra(const graph & fwd, const graph & bwd, trav & bwd_trav, 
                         const node src, const node dst,
-                        const dist dist_limit = dist_max, // for dist(src,dst)
-                        const bool pruned = false, // search is pruned by:
+                        const dist dist_limit = dist::infinity,
+                        const bool pruned = false, // is search pruned by:
                         std::function<bool(node, dist, node)> filter
                                = [](node v, dist d, node par) { return true; }
                   ) {
@@ -140,18 +140,18 @@ public:
         queue.push(node_dist(src, 0));
         bwd_trav.distances[dst] = 0;
         bwd_trav.queue.push(node_dist(dst, 0));
-        dist cur_dist_src_dst = dist_max, fwd_radius = 0, bwd_radius = 0;
+        dist cur_dist_src_dst = dist::infinity, fwd_radius = 0, bwd_radius = 0;
 
         while ( ! (queue.empty() && bwd_trav.queue.empty()) ) {
             fwd_radius = bidir_dijkstra_step
                 (fwd, cur_dist_src_dst, dist_limit,
                  bwd_trav, dst, pruned ? 0 : bwd_radius, filter);
-            if (fwd_radius == dist_max && ! pruned) { break; } //fwd search done
+            if (fwd_radius == dist::infinity && ! pruned) { break; } //fwd search done
             bwd_radius =
                 bwd_trav.bidir_dijkstra_step
                 (bwd, cur_dist_src_dst, dist_limit,
                  (*this), src, pruned ? 0 : fwd_radius, filter);
-            if (bwd_radius == dist_max && ! pruned) { break; } //bwd search done
+            if (bwd_radius == dist::infinity && ! pruned) { break; } //bwd search done
             /*
             std::cerr<<"src="<< src <<" dst="<< dst
                      <<" frad="<< fwd_radius <<" brad="<< bwd_radius
@@ -172,8 +172,8 @@ public:
                              const trav & oth_trav, const node oth,
                              const dist oth_radius, // progr. of other search
                              std::function<bool(node, dist, node)> filter) {
-        assert(oth_radius < dist_max);
-        if (queue.empty()) { return dist_max; }
+        assert(oth_radius < dist::infinity);
+        if (queue.empty()) { return dist::infinity; }
         node_dist ud;
         do {
             ud = queue.top(); queue.pop();
@@ -197,7 +197,7 @@ public:
                 dist dv = du + dist(e.len);
                 // do we meet other traversal?
                 dist d_v_oth = oth_trav.distances[v];
-                if (d_v_oth < dist_max && dv + d_v_oth < cur_dist_src_dst) {
+                if (d_v_oth < dist::infinity && dv + d_v_oth < cur_dist_src_dst) {
                     cur_dist_src_dst = dv + d_v_oth;
                 }
                 // Continue searching:
@@ -211,7 +211,7 @@ public:
             return du;
         }
         assert(queue.empty());
-        return dist_max; // no more nodes
+        return dist::infinity; // no more nodes
     }
 
 };
