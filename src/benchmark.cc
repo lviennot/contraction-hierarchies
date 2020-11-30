@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     std::cout <<"road graph : n="<< g.nb_nodes()
               <<" m="<< g.nb_edges() <<"\n";
 
-    // All pairs:
+    // All pairs with dijkstra:
     {
         auto start = std::chrono::high_resolution_clock::now();
         traversal trav;
@@ -31,6 +31,9 @@ int main(int argc, char **argv) {
             <std::chrono::milliseconds>(stop - start);
         std::cerr << n <<" x "<< n  <<" pairs: "<< duration.count() <<" ms\n";
     }
+
+
+    // Distance oracle with contraction hierarchies.
     
     contraction contr(g);
     digraph g_ch = contr.contract();
