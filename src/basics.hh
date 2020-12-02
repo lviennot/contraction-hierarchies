@@ -45,13 +45,6 @@ struct edge_head {
         os << hd.dst << "," << hd.len;
         return os;
     }
-    bool operator<(const edge_head o) const {
-        if (dst != o.dst) return dst < o.dst;
-        return len < o.len;
-    }
-    bool operator==(const edge_head o) const {
-        return dst == o.dst && len == o.len;
-    }
 };
 
 struct edge : public edge_head {
