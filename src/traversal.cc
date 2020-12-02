@@ -36,7 +36,7 @@ namespace unit {
         std::vector<std::string>
             labs = { "50532632", "82568690", "339428091", "245917016",
                      "2502605852", "340493863", "343442277", "404670649"};
-        std::vector<int> ids;
+        std::vector<node> ids;
         for (auto s : labs) { ids.push_back(edges_road.index(s)); }
 
         for (node u : ids) {

@@ -6,9 +6,12 @@ using namespace ch;
 
 int main(int argc, char **argv) {
 
-    assert(argc == 2);
+    assert(argc == 2 || argc == 3);
     auto n_nodes = std::stoll(std::string(argv[1]));
     std::cout <<"Test from n_nodes="<< n_nodes <<"\n"<< std::flush;
+
+    std::string fname_rank = "";
+    if (argc == 3) { fname_rank = std::string(argv[2]); }
     
     digraph g;
     label_edges edges_road = label_edges("test_data/road_corsica.txt");

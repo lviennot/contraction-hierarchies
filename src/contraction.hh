@@ -24,7 +24,7 @@ protected:
     std::vector<std::size_t> contract_rank;
     std::size_t current_rank;
     std::size_t n, m; // number of node and edges in current contracted graph
-    std::vector<node> in_degrees, out_degrees;
+    std::vector<std::size_t> in_degrees, out_degrees;
 
 public:
 

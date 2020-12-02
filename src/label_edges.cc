@@ -61,7 +61,9 @@ namespace unit {
     
     void test_label_edges() {
         label_edges edg("test_data/small.txt");
-        for (node i : irange<node>(0, 7)) { edg.index(std::to_string(i)); }
+        for (node i : irange<node>(node(0), node(7))) {
+            edg.index(std::to_string(i));
+        }
         CHECK(edg.indexes.count("not a label") == 0);
         
         CHECK(edg.labels.size() == 11);

@@ -119,7 +119,7 @@ digraph::subgraph(std::function<bool(node)> filter) {
     digraph h;
     auto add = [&index_orig, &index, invalid](node v) {
         if (index[v] == invalid) {
-            index[v] = index_orig.size();
+            index[v] = node(index_orig.size());
             index_orig.push_back(v);
         }
         return index[v];
@@ -151,7 +151,7 @@ namespace unit {
         std::cout << dg_small_ids
                   <<"inp: n="<<  dg_small_ids.nb_nodes()
                   <<" m="<< dg_small_ids.nb_edges() <<"\n";
-        std::vector<edge> edges = {
+        std::vector<std::vector<int>> i_edges = {
             {0, 1, 1}, {1, 2, 1}, {2, 3, 1}, {3, 4, 1},
             {0, 4, 10}, {2, 5, 10}, {5, 6, 1}, {6, 3, 1},
             {4, 0, 3}, {5, 1, 1}, {3, 3, 2},
@@ -176,6 +176,10 @@ namespace unit {
           \- 5 --1--> 6 --------1-----/
 
         */
+        std::vector<edge> edges;
+        for (auto e : i_edges) {
+            edges.emplace_back(node(e[0]), node(e[1]), edge_len(e[2]));
+        }
         
         for (auto e : edges) { std::cout << e <<"\n"; }
         digraph g;

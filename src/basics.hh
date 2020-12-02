@@ -16,12 +16,14 @@
 #include <string>
 #include <iostream>
 
+#include "uint_index.hh"
 #include "saturated_uint.hh"
-
 
 namespace ch {
 
-using node = std::uint_least32_t;  // nodes are indexes of arrays
+// nodes are indexes of arrays
+struct _node; 
+using node = uint_index<std::uint_least32_t, _node>;  
 
 // length of an edge (also weight or cost)
 using edge_len = saturated_uint <std::uint_least32_t>;
@@ -43,6 +45,13 @@ struct edge_head {
         os << hd.dst << "," << hd.len;
         return os;
     }
+    bool operator<(const edge_head o) const {
+        if (dst != o.dst) return dst < o.dst;
+        return len < o.len;
+    }
+    bool operator==(const edge_head o) const {
+        return dst == o.dst && len == o.len;
+    }
 };
 
 struct edge : public edge_head {
@@ -55,6 +64,14 @@ struct edge : public edge_head {
     friend std::ostream& operator<<(std::ostream& os, edge e) {
         os << "{" << e.src << ", " << e.dst << ", " << e.len << "}";
         return os;
+    }
+    bool operator<(const edge o) const {
+        if (src != o.src) return src < o.src;
+        if (dst != o.dst) return dst < o.dst;
+        return len < o.len;
+    }
+    bool operator==(const edge o) const {
+        return src == o.src && dst == o.dst && len == o.len;
     }
 };
 
