@@ -14,7 +14,7 @@ message(STATUS "  Build type ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Compiler ID : ${CMAKE_CXX_COMPILER_ID}")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	set(EXTRA_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -pedantic" CACHE STRING "Extra flags used by the compiler during all build types.")
+#	set(EXTRA_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter -pedantic" CACHE STRING "Extra flags used by the compiler during all build types.")
         message(STATUS "  Extra flags : ${EXTRA_CXX_FLAGS}")
 	set(EXTRA_EXE_LINKER_FLAGS "" CACHE STRING "Extra flags used by the linker.")
 	set(EXTRA_EXE_LINKER_FLAGS_RELEASE "-flto" CACHE STRING "Extra flags used by the linker for the Release build type.")
@@ -42,6 +42,11 @@ add_library(common OBJECT
 
 add_executable(main
         src/main.cc
+        $<TARGET_OBJECTS:common>
+)
+
+add_executable(read
+        src/read.cc
         $<TARGET_OBJECTS:common>
 )
 

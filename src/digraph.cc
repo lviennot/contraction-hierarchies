@@ -67,7 +67,7 @@ std::istream& operator>>(std::istream & is, digraph & g) {
         CHECK(iss.eof());
         auto src_i = std::stoll(src_s);
         auto dst_i = std::stoll(dst_s);
-        auto len_i = std::stoll(len_s);
+        int64_t len_i = std::stoll(len_s);
         CHECK(src_i >= 0 && uint64_t(src_i) <= uint64_t(node_max));
         CHECK(dst_i >= 0 && uint64_t(dst_i) <= uint64_t(node_max));
         CHECK(len_i >= 0 && uint64_t(len_i) <= uint64_t(length_max));

@@ -22,7 +22,7 @@ void usage_exit (char **argv) {
         return acc;
     };
     
-    std::cerr <<"\nUsage: "<< argv[0] <<" [graph] [subset] [max_deg]\n"
+    std::cerr <<"\nUsage: "<< argv[0] <<" [-hierarchies] [graph] [subset] [max_deg]\n"
               << paragraph (
         "\nContracts nodes of the graph in file [graph] until average degree "
         "reaches [max_deg]. Nodes from [subset] are never contracted. "
@@ -32,13 +32,38 @@ void usage_exit (char **argv) {
               << paragraph (
         "\nInput format for [graph]: one edge per line with format: "
         "[src] [dst] [length]" )
-              <<"Input format for [subset]: one node per line.\n";
+              <<"Input format for [subset]: one node per line."
+              << paragraph(
+                           "\nOutputs a distance preserver for nodes in [subset] (i.e. a graph with node set containing [subset] with same distances as in the original graph, and with average degree at most [max_deg]). If option [-hierarchies] is given then it instead outputs the contraction hierarchies (i.e. a graph with same node set and same distances where any pair of nodes are linked by a few hops shortest path), the contraction order is given as a comment line."
+                           )
+        ;
         exit(1);
 }
 
 
 int main (int argc, char **argv) {
 
+    // ------- helper functions for manipulating args ----------
+    auto i_arg = [&argc,&argv](std::string a) {
+        for (int i = 1; i < argc; ++i)
+            if (a == argv[i])
+                return i;
+        return -1;
+    };
+    auto del_arg = [&argc,&argv,i_arg](std::string a) {
+        int i = i_arg(a);
+        if (i >= 0) {
+            for (int j = i+1; j < argc; ++j)
+                argv[j-1] = argv[j];
+            --argc;
+            return true;
+        }
+        return false;
+    };
+
+    bool do_graph = del_arg("-graph");
+    bool do_hierarchies = del_arg("-hierarchies");
+    
     // ------------------------ usage -------------------------
     if (argc != 4) {
         usage_exit(argv);
@@ -60,6 +85,10 @@ int main (int argc, char **argv) {
     std::cerr <<"maximum edge length: "<< maxlen
               <<" (distance overflow at "<< dist_max <<")\n";
 
+    if (do_graph) {
+        std::cout << g;
+    }
+
     // ------------------------- load subset -----------------------
     std::vector<node> subset;
     std::ifstream input(fsubset);
@@ -76,13 +105,25 @@ int main (int argc, char **argv) {
     std::cerr << "contraction\n";
 
     // ----------------------------- output ------------------------
-    auto subind = g_ch.subgraph
-        ([&ch](node v){ return ch.in_contracted_graph(v); });
-    for (node u : subind.first) {
-        for (auto e : subind.first[u]) {
-            std::cout << labedg.label(subind.second[u])
-                      <<"\t"<< labedg.label(subind.second[e.dst])
-                      <<"\t"<< e.len <<"\n";
+    if (do_hierarchies) {
+        std::vector<node> contr_order(ch.contraction_order());
+        std::cout <<"# contraction_order:";
+        for (node u : contr_order) { std::cout <<" "<< u; }
+        std::cout <<"\n";
+        for (node u : g_ch) {
+            for (auto e : g_ch[u]) {
+                std::cout << u <<"\t"<< e.dst <<"\t"<< e.len <<"\n";
+            }
+        }
+    } else {
+        auto subind = g_ch.subgraph
+            ([&ch](node v){ return ch.in_contracted_graph(v); });
+        for (node u : subind.first) {
+            for (auto e : subind.first[u]) {
+                std::cout << labedg.label(subind.second[u])
+                          <<"\t"<< labedg.label(subind.second[e.dst])
+                          <<"\t"<< e.len <<"\n";
+            }
         }
     }
 }

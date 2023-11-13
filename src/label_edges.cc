@@ -38,14 +38,14 @@ void label_edges::parse_istream(std::istream & is) {
             std::getline(is, line);
         }
         std::istringstream iss(line);
-        CHECK( ! iss.eof());
+        if (iss.eof()) continue; // empty line
         iss >> src_s;
         CHECK( ! iss.eof());
         iss >> dst_s;
-        CHECK( ! iss.eof());
-        iss >> len_s;
+        if (iss.eof()) { len_s = "1"; }
+        else { iss >> len_s; }
         CHECK(iss.eof());
-        auto len_i = std::stoll(len_s);
+        int64_t len_i = std::stoll(len_s);
         CHECK(len_i >= 0 && uint64_t(len_i) <= uint64_t(length_max));
         auto src_i = add_label(src_s);
         auto dst_i = add_label(dst_s);

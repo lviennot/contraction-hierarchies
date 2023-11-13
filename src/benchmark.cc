@@ -1,6 +1,7 @@
 #include "contraction.hh"
 #include "label_edges.hh"
 #include <ctime>
+#include <chrono>
 
 using namespace ch;
 

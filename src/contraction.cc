@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <ctime>
+#include <chrono>
 
 #include "contraction.hh"
 #include "label_edges.hh"
